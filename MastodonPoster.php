@@ -1,5 +1,4 @@
 <?php
-
 namespace ulrischa;
 
 class MastodonClient {
@@ -37,7 +36,7 @@ class MastodonClient {
         return json_decode($response, true);
     }
 
-    public function uploadMedia($filePath, $description) {
+    private function uploadMedia($filePath, $description) {
         $url = $this->apiBaseUrl . '/api/v1/media';
 
         $file = new \CURLFile($filePath);
@@ -63,28 +62,19 @@ class MastodonClient {
         return json_decode($response, true);
     }
 
-    public function postStatusWithMedia($statusText, $filePaths, $descriptions) {
-        $mediaIds = [];
-        foreach ($filePaths as $index => $filePath) {
-            $description = $descriptions[$index] ?? '';
-            $uploadResponse = $this->uploadMedia($filePath, $description);
-            $mediaIds[] = $uploadResponse['id'] ?? null;
+    public function postStatus($statusText, $filePaths=null, $descriptions=null) {
+        if (!empty($filePaths) && !empty($descriptions)) {
+            $mediaIds = [];
+            foreach ($filePaths as $index => $filePath) {
+                $description = $descriptions[$index] ?? '';
+                $uploadResponse = $this->uploadMedia($filePath, $description);
+                $mediaIds[] = $uploadResponse['id'] ?? null;
+            }
+    
+            return $this->sendHttp($this->apiBaseUrl . '/api/v1/statuses', [], ['status' => $statusText, 'media_ids' => $mediaIds]);
         }
-
-        return $this->sendHttp($this->apiBaseUrl . '/api/v1/statuses', [], ['status' => $statusText, 'media_ids' => $mediaIds]);
+        else return $this->sendHttp($this->apiBaseUrl . '/api/v1/statuses', [], ['status' => $statusText]);
     }
 
-    public function postStatus($statusText) {
-        return $this->sendHttp($this->apiBaseUrl . '/api/v1/statuses', [], ['status' => $statusText]);
-    }
 }
-
-
-
-
-
-
-
-
-
 ?>
