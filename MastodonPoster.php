@@ -1,7 +1,7 @@
 <?php
 namespace ulrischa;
 
-class MastodonClient {
+class MastodonPoster {
     private $accessToken;
     private $apiBaseUrl = 'https://mastodon.social';
 
