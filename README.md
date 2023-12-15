@@ -17,7 +17,7 @@ require_once('MastodonPoster.php');
 
 // Usage example
 $accessToken = 'XXX'; // Replace with your access token created before (see 1.)
-$mastodon = new ulrischa\MastodonClient($accessToken);
+$mastodon = new ulrischa\MastodonPoster($accessToken);
 
 // Post a status with multiple media
 $filePaths = ['image.jpg'];
