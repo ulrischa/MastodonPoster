@@ -22,7 +22,7 @@ $mastodon = new ulrischa\MastodonClient($accessToken);
 // Post a status with multiple media
 $filePaths = ['image.jpg'];
 $descriptions = ['First image description'];
-$statusResponse = $mastodon->postStatusWithMedia('Your status text', $filePaths, $descriptions);
+$statusResponse = $mastodon->postStatus('Your status text', $filePaths, $descriptions);
 print_r($statusResponse);
 
 // Post a text-only status
