@@ -4,7 +4,9 @@ Simple PHP class to post status with images on mastodon.
 ## How to use it?
 ### 1. Create App in Mastodon
 Create an app and get an access token from Mastodon: https://mastodon.social/settings/applications
+
 You just need an applicationname and read + write permissions
+
 Copy the Accesstoken to use it in your code.
 
 ### 2. Use code
