@@ -100,7 +100,9 @@ class MastodonPoster
         }
         if (isset($options['scheduled_at'])) {
             $date = $options['scheduled_at'];
-            if (!preg_match('/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d+)?(?:Z|[+-]\d{2}:\d{2})$/D', $date)
+            $formatValid = preg_match('/^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2}):(\d{2})(?:\.\d+)?(?:Z|[+-]\d{2}:\d{2})$/D', $date, $parts);
+            if (!$formatValid || !checkdate((int) $parts[2], (int) $parts[3], (int) $parts[1])
+                || (int) $parts[4] > 23 || (int) $parts[5] > 59 || (int) $parts[6] > 59
                 || strtotime($date) === false || strtotime($date) < time() + 300) {
                 throw new \InvalidArgumentException('Schedule an ISO 8601 timestamp with timezone at least five minutes ahead.');
             }

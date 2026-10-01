@@ -85,7 +85,7 @@ $tests['status options and idempotency header'] = function () {
 };
 $tests['invalid input fails before uploads'] = function () {
     $poster = new FakePoster('test-token');
-    foreach ([['visibility' => 'typo'], ['sensitive' => 'false'], ['media_ids' => ['1']], ['language' => 'German'], ['in_reply_to_id' => '../1'], ['scheduled_at' => 'tomorrow'], ['idempotency_key' => "key\nInjected: yes"]] as $options) {
+    foreach ([['visibility' => 'typo'], ['sensitive' => 'false'], ['media_ids' => ['1']], ['language' => 'German'], ['in_reply_to_id' => '../1'], ['scheduled_at' => 'tomorrow'], ['scheduled_at' => '2099-02-31T12:00:00Z'], ['scheduled_at' => '2099-01-01T25:00:00Z'], ['idempotency_key' => "key\nInjected: yes"]] as $options) {
         expect_exception(function () use ($poster, $options) { $poster->postStatus('Text', [__FILE__], null, $options); }, InvalidArgumentException::class);
     }
     expect_exception(function () use ($poster) { $poster->postStatus('  '); }, InvalidArgumentException::class);
@@ -143,7 +143,7 @@ $tests['HTTP and malformed responses'] = function () {
     foreach (['', 'null', '[]', '<html>Error</html>', '{broken', '{"error":"Unexpected"}'] as $body) {
         expect_exception(function () use ($poster, $body) { $poster->decode($body, 200); }, RuntimeException::class);
     }
-    check($poster->decode('', 206) === response([], 206), 'Accept empty processing response');
+    check($poster->decode('', 206) === ['status' => 206, 'data' => []], 'Accept empty processing response');
     check($poster->decode('{"id":"99999999999999999999"}', 200)['data']['id'] === '99999999999999999999', 'Preserve large ID');
 };
 
